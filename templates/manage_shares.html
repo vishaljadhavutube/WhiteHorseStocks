@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Shares</title>
+</head>
+<body>
+    <h1>Manage Shares</h1>
+    <form method="post">
+        <label for="share_name">Share Name:</label>
+        <input type="text" id="share_name" name="share_name" required>
+        <br>
+        <input type="submit" name="action" value="add" />
+        <input type="submit" name="action" value="remove" />
+        <input type="submit" name="action" value="save" />
+    </form>
+    <h2>Current Shares:</h2>
+    <ul>
+        {% for share_name in share_names %}
+            <li>{{ share_name }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Pending Changes:</h2>
+    <ul>
+        {% for share_name in share_names_temp %}
+            <li>{{ share_name }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('index') }}">Back to Stock Data</a>
+</body>
+</html>

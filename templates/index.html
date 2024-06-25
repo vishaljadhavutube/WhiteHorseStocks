@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mt-4">Shares</h1>
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>Ticker</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for share in shares %}
+        <tr>
+            <td>{{ share.ticker }}</td>
+            <td>
+                <form action="{{ url_for('delete_share', share_id=share.id) }}" method="POST" style="display:inline-block;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

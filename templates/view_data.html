@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mt-4">Stock Data</h1>
+<form method="POST" action="{{ url_for('view_data') }}">
+    <button type="submit" class="btn btn-primary mb-3">Refresh Data</button>
+</form>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Script</th>
+            <th>Concat</th>
+            <th>MHB</th>
+            <th>YHB</th>
+            <th>Percentage</th>
+            <th>High to High</th>
+            <th>Price</th>
+            <th>ATH</th>
+            <th>Month High</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in stock_data %}
+        <tr>
+            <td>{{ data.script }}</td>
+            <td>{{ data.concat }}</td>
+            <td>{{ data.mhb }}</td>
+            <td>{{ data.yhb }}</td>
+            <td>{{ data.percentage }}</td>
+            <td>{{ data.high_to_high }}</td>
+            <td>{{ data.price }}</td>
+            <td>{{ data.ath }}</td>
+            <td>{{ data.month_high }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mt-4">Add Shares</h1>
+<form method="POST" action="{{ url_for('add_share') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.tickers.label(class="form-control-label") }}
+        {{ form.tickers(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}
