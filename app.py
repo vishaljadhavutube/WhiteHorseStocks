@@ -62,11 +62,20 @@ def update_data():
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
     if request.method == 'POST':
-        update_data()
-    stock_data = StockData.query.all()
+        update_stock_data([share.ticker for share in Share.query.all()])
+        flash('Stock data updated!', 'success')
+
+    search = request.args.get('search')
+    sort_by = request.args.get('sort_by', 'script')
+    order = request.args.get('order', 'asc')
+
+    query = StockData.query
+    if search:
+        query = query.filter(StockData.script.like(f'%{search}%'))
+
+    stock_data = query.order_by(getattr(getattr(StockData, sort_by), order)()).all()
+
     return render_template('view_data.html', stock_data=stock_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
