@@ -12,12 +12,10 @@ db.init_app(app)
 
 from models import Share, StockData
 
-
 @app.route('/')
 def index():
     shares = Share.query.all()
     return render_template('index.html', shares=shares)
-
 
 @app.route('/add_share', methods=['GET', 'POST'])
 def add_share():
@@ -42,7 +40,6 @@ def add_share():
         return redirect(url_for('index'))
     return render_template('add_share.html', form=form)
 
-
 @app.route('/delete_share/<int:share_id>', methods=['POST'])
 def delete_share(share_id):
     share = Share.query.get_or_404(share_id)
@@ -54,7 +51,6 @@ def delete_share(share_id):
     flash(f'Share {share.ticker} and its associated data deleted!', 'success')
     return redirect(url_for('index'))
 
-
 @app.route('/update_data')
 def update_data():
     shares = Share.query.all()
@@ -63,7 +59,6 @@ def update_data():
     flash('Stock data updated!', 'success')
     return redirect(url_for('index'))
 
-
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
     if request.method == 'POST':
@@ -71,6 +66,7 @@ def view_data():
     stock_data = StockData.query.all()
     return render_template('view_data.html', stock_data=stock_data)
 
-
 if __name__ == '__main__':
     app.run(debug=True)
+
+
