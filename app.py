@@ -51,13 +51,17 @@ def delete_share(share_id):
     flash(f'Share {share.ticker} and its associated data deleted!', 'success')
     return redirect(url_for('index'))
 
+
 @app.route('/update_data')
 def update_data():
     shares = Share.query.all()
-    tickers = [share.ticker for share in shares]
-    update_stock_data(tickers)
+    updated_stocks = update_stock_data([share.ticker for share in shares])
+
+    if updated_stocks:
+        return render_template('alert.html', updated_stocks=updated_stocks)
+
     flash('Stock data updated!', 'success')
-    return redirect(url_for('index'))
+    return redirect(url_for('view_data'))
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
