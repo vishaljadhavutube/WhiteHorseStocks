@@ -51,42 +51,22 @@ def delete_share(share_id):
     flash(f'Share {share.ticker} and its associated data deleted!', 'success')
     return redirect(url_for('index'))
 
-
 @app.route('/update_data')
 def update_data():
     shares = Share.query.all()
-    updated_stocks = update_stock_data([share.ticker for share in shares])
-
+    tickers = [share.ticker for share in shares]
+    updated_stocks = update_stock_data(tickers)
     if updated_stocks:
         return render_template('alert.html', updated_stocks=updated_stocks)
-
     flash('Stock data updated!', 'success')
-    return redirect(url_for('view_data'))
-
-# @app.route('/view_data', methods=['GET', 'POST'])
-# def view_data():
-#     if request.method == 'POST':
-#         update_stock_data([share.ticker for share in Share.query.all()])
-#         flash('Stock data updated!', 'success')
-#
-#     search = request.args.get('search')
-#     sort_by = request.args.get('sort_by', 'script')
-#     order = request.args.get('order', 'asc')
-#
-#     query = StockData.query
-#     if search:
-#         query = query.filter(StockData.script.like(f'%{search}%'))
-#
-#     stock_data = query.order_by(getattr(getattr(StockData, sort_by), order)()).all()
-#
-#     return render_template('view_data.html', stock_data=stock_data)
+    return redirect(url_for('index'))
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
     if request.method == 'POST':
         updated_stocks = update_stock_data([share.ticker for share in Share.query.all()])
         if updated_stocks:
-            return render_template('alert.html', updated_stocks=updated_stocks)
+            return redirect(url_for('alert', updated_stocks=updated_stocks))
         flash('Stock data updated!', 'success')
 
     search = request.args.get('search')
@@ -103,7 +83,10 @@ def view_data():
         stock_data = query.order_by(getattr(StockData, sort_by).asc()).all()
 
     return render_template('view_data.html', stock_data=stock_data)
-
+@app.route('/alert')
+def alert():
+    updated_stocks = request.args.get('updated_stocks')
+    return render_template('alert.html', updated_stocks=updated_stocks)
 
 if __name__ == '__main__':
     app.run(debug=True)
