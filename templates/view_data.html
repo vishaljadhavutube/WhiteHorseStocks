@@ -2,21 +2,60 @@
 
 {% block content %}
 <h1 class="mt-4">Stock Data</h1>
-<form method="POST" action="{{ url_for('view_data') }}">
-    <button type="submit" class="btn btn-primary mb-3">Refresh Data</button>
+<form method="GET" action="{{ url_for('view_data') }}">
+    <div class="form-group">
+        <input type="text" name="search" class="form-control" placeholder="Search by script" value="{{ request.args.get('search', '') }}">
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Search</button>
 </form>
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Script</th>
-            <th>Concat</th>
-            <th>MHB</th>
-            <th>YHB</th>
-            <th>Percentage</th>
-            <th>High to High</th>
-            <th>Price</th>
-            <th>ATH</th>
-            <th>Month High</th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='script', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'script' else 'desc') }}">
+                    Script
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='concat', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'concat' else 'desc') }}">
+                    Concat
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='mhb', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'mhb' else 'desc') }}">
+                    MHB
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='yhb', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'yhb' else 'desc') }}">
+                    YHB
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='percentage', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'percentage' else 'desc') }}">
+                    Percentage
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='high_to_high', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'high_to_high' else 'desc') }}">
+                    High to High
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='price', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'price' else 'desc') }}">
+                    Price
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='ath', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'ath' else 'desc') }}">
+                    ATH
+                </a>
+            </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='month_high', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'month_high' else 'desc') }}">
+                    Month High
+                </a>
+            </th>
         </tr>
     </thead>
     <tbody>
