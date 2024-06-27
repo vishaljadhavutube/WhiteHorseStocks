@@ -112,3 +112,5 @@ def update_stock_data(share_list):
                     })
         db.session.commit()
     return updated_stocks
+
+
