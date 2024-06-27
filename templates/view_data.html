@@ -56,6 +56,11 @@
                     Month High
                 </a>
             </th>
+            <th>
+                <a href="{{ url_for('view_data', search=request.args.get('search'), sort_by='crossed_prior_month_high', order='asc' if request.args.get('order') == 'desc' or request.args.get('sort_by') != 'crossed_prior_month_high' else 'desc') }}">
+                    Crossed Prior Month High
+                </a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -70,6 +75,7 @@
             <td>{{ data.price }}</td>
             <td>{{ data.ath }}</td>
             <td>{{ data.month_high }}</td>
+            <td>{{ data.crossed_prior_month_high }}</td>
         </tr>
         {% endfor %}
     </tbody>
