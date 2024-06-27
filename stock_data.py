@@ -1,3 +1,4 @@
+# stock_data.py
 import yfinance as yf
 from models import StockData
 from extensions import db
@@ -40,6 +41,7 @@ def get_last_date_next_month():
     last_day_next_month = calendar.monthrange(next_month_year, next_month)[1]
     last_date_next_month = datetime(next_month_year, next_month, last_day_next_month)
     return last_date_next_month
+
 def update_stock_data(share_list):
     updated_stocks = []
     for ticker in share_list:
@@ -62,6 +64,8 @@ def update_stock_data(share_list):
             all_time_high_percentage = (current_price / max_high_1980_to_next_month) * 100 if max_high_1980_to_next_month else None
             all_time_high_percentage = round(all_time_high_percentage, 2) if all_time_high_percentage else None
 
+            crossed_prior_month_high = current_price > max_high_previous_month if max_high_previous_month else False
+
             existing_stock = StockData.query.filter_by(script=share_name).first()
             if existing_stock:
                 should_alert = False
@@ -78,6 +82,7 @@ def update_stock_data(share_list):
                 existing_stock.price = round(current_price, 2)
                 existing_stock.ath = round(max_high_1980_to_next_month, 2) if max_high_1980_to_next_month else None
                 existing_stock.month_high = round(max_high_previous_month, 2) if max_high_previous_month else None
+                existing_stock.crossed_prior_month_high = crossed_prior_month_high
 
                 if should_alert:
                     updated_stocks.append({
@@ -95,7 +100,8 @@ def update_stock_data(share_list):
                     high_to_high=round(current_price - max_high_1980_to_last_year, 2) if max_high_1980_to_last_year else None,
                     price=round(current_price, 2),
                     ath=round(max_high_1980_to_next_month, 2) if max_high_1980_to_next_month else None,
-                    month_high=round(max_high_previous_month, 2) if max_high_previous_month else None
+                    month_high=round(max_high_previous_month, 2) if max_high_previous_month else None,
+                    crossed_prior_month_high=crossed_prior_month_high
                 )
                 db.session.add(new_stock)
                 if month_high or year_high:
