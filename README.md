@@ -1,19 +1,9 @@
 To run the database use the following command 
 
-To run this command you should be on project level 
+Postgresql set up 
 <pre>
-cd path/to/your/flask/project
-</pre>
-<pre>
-source venv/bin/activate
-</pre>
-<pre>
-pip3 install flask flask_sqlalchemy flask_wtf
-</pre>
-<pre>
-flask shell
-</pre>
-<pre>
-from extensions import db
-db.create_all()
+rm -rf migrations
+flask db init
+flask db migrate -m "Initial migration."
+flask db upgrade
 </pre>

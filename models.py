@@ -16,4 +16,4 @@ class StockData(db.Model):
     price = db.Column(db.Float)
     ath = db.Column(db.Float)
     month_high = db.Column(db.Float)
-    crossed_prior_month_high = db.Column(db.Boolean, default=False)  # New column
+    crossed_prior_month_high = db.Column(db.Boolean, default=False)
