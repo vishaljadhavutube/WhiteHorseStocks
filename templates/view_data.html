@@ -61,6 +61,7 @@
                     Crossed Prior Month High
                 </a>
             </th>
+            <th>Last Updated</th>
         </tr>
     </thead>
     <tbody>
@@ -76,6 +77,7 @@
             <td>{{ data.ath }}</td>
             <td>{{ data.month_high }}</td>
             <td>{{ data.crossed_prior_month_high }}</td>
+            <td>{{ data.last_updated_ist.strftime('%Y-%m-%d %H:%M:%S') }}</td>
         </tr>
         {% endfor %}
     </tbody>

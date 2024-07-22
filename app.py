@@ -2,11 +2,6 @@ from flask import Flask, render_template, redirect, url_for, flash, request
 from extensions import db
 from forms import ShareForm
 from stock_data import update_stock_data
-
-from flask import Flask, render_template, redirect, url_for, flash, request
-from extensions import db
-from forms import ShareForm
-from stock_data import update_stock_data
 from flask_migrate import Migrate
 
 from models import Share, StockData
@@ -17,9 +12,7 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost:5432/your_database'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_owner:vnSjPYcR5xL7@ep-plain-voice-a5jba9bq.us-east-2.aws.neon.tech/db?sslmode=require'
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -79,7 +72,6 @@ def update_data():
         return render_template('alert.html', updated_stocks=updated_stocks)
     flash('Stock data updated!', 'success')
     return redirect(url_for('index'))
-
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
