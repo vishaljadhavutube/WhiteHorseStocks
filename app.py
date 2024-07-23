@@ -76,11 +76,10 @@ def update_data():
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
-    if request.method == 'POST':
+    if request.args.get('refresh') == 'true':
         updated_stocks = update_stock_data([share.ticker for share in Share.query.all()])
         if updated_stocks:
-            return redirect(url_for('alert', updated_stocks=updated_stocks))
-        flash('Stock data updated!', 'success')
+            flash('Stock data updated!', 'success')
 
     search = request.args.get('search')
     sort_by = request.args.get('sort_by', 'script')
@@ -96,8 +95,6 @@ def view_data():
         stock_data = query.order_by(getattr(StockData, sort_by).asc()).all()
 
     return render_template('view_data.html', stock_data=stock_data)
-
-
 @app.route('/alert')
 def alert():
     updated_stocks = request.args.get('updated_stocks')

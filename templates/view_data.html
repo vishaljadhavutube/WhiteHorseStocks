@@ -2,13 +2,19 @@
 
 {% block content %}
 <h1 class="mt-4">Stock Data</h1>
-<form method="GET" action="{{ url_for('view_data') }}">
+<form method="GET" action="{{ url_for('view_data') }}" id="dataForm">
     <div class="form-group">
         <input type="text" name="search" class="form-control" placeholder="Search by script" value="{{ request.args.get('search', '') }}">
     </div>
     <button type="submit" class="btn btn-primary mb-3">Search</button>
+    <button type="button" id="refreshButton" class="btn btn-secondary mb-3" onclick="refreshData()">Refresh</button>
 </form>
-<table class="table table-bordered">
+
+<div id="progressBarContainer" class="progress mt-3" style="display:none;">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
+<table class="table table-bordered mt-4">
     <thead>
         <tr>
             <th>
@@ -82,4 +88,28 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+function refreshData() {
+    document.getElementById('refreshButton').disabled = true;
+    document.getElementById('progressBarContainer').style.display = 'block';
+
+    fetch('{{ url_for('view_data') }}?refresh=true')
+        .then(response => response.text())
+        .then(data => {
+            document.open();
+            document.write(data);
+            document.close();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while refreshing the data.');
+        })
+        .finally(() => {
+            document.getElementById('refreshButton').disabled = false;
+            document.getElementById('progressBarContainer').style.display = 'none';
+        });
+}
+</script>
+
 {% endblock %}
