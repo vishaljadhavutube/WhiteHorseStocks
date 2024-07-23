@@ -1,29 +1,3 @@
-# stock_data.py
-
-import yfinance as yf
-from models import StockData
-from extensions import db
-from datetime import datetime, timedelta
-import calendar
-import numpy as np
-
-# def get_max_high(ticker, start_date, end_date):
-#     data = yf.download(ticker, start=start_date, end=end_date)
-#     if not data.empty:
-#         max_high = data['High'].max()
-#         return max_high
-#     else:
-#         return None
-
-# def get_current_price(ticker):
-#     stock = yf.Ticker(ticker)
-#     data = stock.history(period="1d")
-#     if not data.empty:
-#         current_price = data['Close'].iloc[-1]
-#         return current_price
-#     else:
-#         return None
-
 import yfinance as yf
 from datetime import datetime, timedelta
 import calendar
@@ -31,6 +5,7 @@ import numpy as np
 from models import StockData
 from extensions import db
 import pandas as pd
+
 
 def get_max_high_batch(tickers, start_date, end_date):
     data = yf.download(tickers, start=start_date, end=end_date, group_by='ticker')
@@ -48,6 +23,7 @@ def get_max_high_batch(tickers, start_date, end_date):
         else:
             max_highs[tickers] = None
     return max_highs
+
 
 def get_current_price_batch(tickers):
     data = yf.download(tickers, period="1d", group_by='ticker')
@@ -72,12 +48,14 @@ def get_last_date_previous_year():
     last_date_previous_year = datetime(today.year - 1, 12, 31)
     return last_date_previous_year
 
+
 def get_previous_month_date_range():
     today = datetime.today()
     first_day_of_current_month = today.replace(day=1)
     last_day_of_previous_month = first_day_of_current_month - timedelta(days=1)
     first_day_of_previous_month = last_day_of_previous_month.replace(day=1)
     return first_day_of_previous_month, last_day_of_previous_month
+
 
 def get_last_date_next_month():
     today = datetime.today()
@@ -86,6 +64,8 @@ def get_last_date_next_month():
     last_day_next_month = calendar.monthrange(next_month_year, next_month)[1]
     last_date_next_month = datetime(next_month_year, next_month, last_day_next_month)
     return last_date_next_month
+
+
 def update_stock_data(share_list):
     updated_stocks = []
     share_names = [ticker.split('.')[0] for ticker in share_list]
@@ -114,7 +94,8 @@ def update_stock_data(share_list):
             month_high = "MHB" if max_high_previous_month and current_price > max_high_previous_month else ""
             year_high = "YHB" if max_high_1980_to_last_year and current_price > max_high_1980_to_last_year else ""
 
-            all_time_high_percentage = (current_price / max_high_1980_to_next_month) * 100 if max_high_1980_to_next_month else None
+            all_time_high_percentage = (
+                                               current_price / max_high_1980_to_next_month) * 100 if max_high_1980_to_next_month else None
             all_time_high_percentage = round(all_time_high_percentage, 2) if all_time_high_percentage else None
 
             crossed_prior_month_high = current_price > max_high_previous_month if max_high_previous_month else False
@@ -130,11 +111,15 @@ def update_stock_data(share_list):
                     should_alert = True
 
                 existing_stock.concat = f"{share_name},"
-                existing_stock.percentage = float(all_time_high_percentage) if all_time_high_percentage is not None else None
-                existing_stock.high_to_high = round(float(current_price) - float(max_high_1980_to_last_year), 2) if max_high_1980_to_last_year else None
+                existing_stock.percentage = float(
+                    all_time_high_percentage) if all_time_high_percentage is not None else None
+                existing_stock.high_to_high = round(float(current_price) - float(max_high_1980_to_last_year),
+                                                    2) if max_high_1980_to_last_year else None
                 existing_stock.price = round(float(current_price), 2)
-                existing_stock.ath = round(float(max_high_1980_to_next_month), 2) if max_high_1980_to_next_month else None
-                existing_stock.month_high = round(float(max_high_previous_month), 2) if max_high_previous_month else None
+                existing_stock.ath = round(float(max_high_1980_to_next_month),
+                                           2) if max_high_1980_to_next_month else None
+                existing_stock.month_high = round(float(max_high_previous_month),
+                                                  2) if max_high_previous_month else None
                 existing_stock.crossed_prior_month_high = crossed_prior_month_high
 
                 if should_alert:
@@ -150,7 +135,8 @@ def update_stock_data(share_list):
                     mhb=month_high,
                     yhb=year_high,
                     percentage=float(all_time_high_percentage) if all_time_high_percentage is not None else None,
-                    high_to_high=round(float(current_price) - float(max_high_1980_to_last_year), 2) if max_high_1980_to_last_year else None,
+                    high_to_high=round(float(current_price) - float(max_high_1980_to_last_year),
+                                       2) if max_high_1980_to_last_year else None,
                     price=round(float(current_price), 2),
                     ath=round(float(max_high_1980_to_next_month), 2) if max_high_1980_to_next_month else None,
                     month_high=round(float(max_high_previous_month), 2) if max_high_previous_month else None,

@@ -7,18 +7,18 @@ from flask_migrate import Migrate
 from models import Share, StockData
 
 import logging
+
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_owner:vnSjPYcR5xL7@ep-plain-voice-a5jba9bq.us-east-2.aws.neon.tech/db?sslmode=require'
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_owner:vnSjPYcR5xL7@ep-plain-voice-a5jba9bq.us-east-2.aws.neon.tech/db?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 migrate = Migrate(app, db)
-
-
 
 
 @app.route('/')
@@ -72,6 +72,7 @@ def update_data():
         return render_template('alert.html', updated_stocks=updated_stocks)
     flash('Stock data updated!', 'success')
     return redirect(url_for('index'))
+
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():

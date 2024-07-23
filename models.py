@@ -3,12 +3,14 @@ from sqlalchemy.sql import func
 from datetime import datetime
 import pytz
 
+
 def utc_to_ist(utc_dt):
     ist = pytz.timezone('Asia/Kolkata')
     utc = pytz.timezone('UTC')
     utc_dt = utc.localize(utc_dt)
     ist_dt = utc_dt.astimezone(ist)
     return ist_dt
+
 
 class Share(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +20,7 @@ class Share(db.Model):
     @property
     def created_at_ist(self):
         return utc_to_ist(self.created_at)
+
 
 class StockData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
