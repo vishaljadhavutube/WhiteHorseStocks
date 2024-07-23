@@ -1,19 +1,31 @@
-To run the database use the following command 
+If you make any changes in the database or in tables you need to run the following command 
+<pre>
+flask db init
+flask db migrate -m "comment for changes"
+flask db upgrade
+</pre>
 
-To run this command you should be on project level 
+
+
+Postgresql set up 
+
 <pre>
-cd path/to/your/flask/project
+#to initialize or to initialize db from scratch use following commands 
+rm -rf migrations
+flask db init
+flask db migrate -m "Initial migration."
+flask db upgrade
 </pre>
+
+<h1>Error and solutions</h1>
+ERROR [flask_migrate] Error: Can't locate revision identified by 'f34b7eaaa032'
+
 <pre>
-source venv/bin/activate
+flask db migrate -m "your migration message"
+flask db upgrade
+
+# Verify the Alembic Version Table
+psql -U yourusername -d yourdbname
+SELECT * FROM alembic_version;
 </pre>
-<pre>
-pip3 install flask flask_sqlalchemy flask_wtf
-</pre>
-<pre>
-flask shell
-</pre>
-<pre>
-from extensions import db
-db.create_all()
-</pre>
+

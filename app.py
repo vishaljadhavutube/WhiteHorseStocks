@@ -2,15 +2,23 @@ from flask import Flask, render_template, redirect, url_for, flash, request
 from extensions import db
 from forms import ShareForm
 from stock_data import update_stock_data
+from flask_migrate import Migrate
+
+from models import Share, StockData
+
+import logging
+
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shares.db'
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_owner:vnSjPYcR5xL7@ep-plain-voice-a5jba9bq.us-east-2.aws.neon.tech/db?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-
-from models import Share, StockData
+migrate = Migrate(app, db)
 
 
 @app.route('/')
@@ -68,11 +76,10 @@ def update_data():
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
-    if request.method == 'POST':
+    if request.args.get('refresh') == 'true':
         updated_stocks = update_stock_data([share.ticker for share in Share.query.all()])
         if updated_stocks:
-            return redirect(url_for('alert', updated_stocks=updated_stocks))
-        flash('Stock data updated!', 'success')
+            flash('Stock data updated!', 'success')
 
     search = request.args.get('search')
     sort_by = request.args.get('sort_by', 'script')
@@ -88,8 +95,6 @@ def view_data():
         stock_data = query.order_by(getattr(StockData, sort_by).asc()).all()
 
     return render_template('view_data.html', stock_data=stock_data)
-
-
 @app.route('/alert')
 def alert():
     updated_stocks = request.args.get('updated_stocks')
